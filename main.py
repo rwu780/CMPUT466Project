@@ -2,6 +2,7 @@ import numpy as np
 import loadData as ld
 import algorithms as al
 import math
+import timeit
 
 def getaccuracy(ytest, predictions):
     correct = 0
@@ -23,7 +24,7 @@ if __name__ == '__main__':
 
     # Follw the same testing format as in Assignments
     classalgs = {'Random': al.Classifier(),
-                 'Naive Bayes': al.NaiveBayes(),
+                 'Linear SVM': al.LinearClassifier(),
                  'Logistic Regression L2 regularizer': al.LogisticRegressionClassifier({'regularizer':'l2'}),
                  'Logistic Regression No regularizer': al.LogisticRegressionClassifier(),
                  'Neural Network': al.NeuralNetwork(),
@@ -41,8 +42,10 @@ if __name__ == '__main__':
     numparams = len(parameters)
 
     errors = {}
+    runningTime = {}
     for learnername in classalgs:
         errors[learnername] = np.zeros((numparams, numruns))
+        runningTime[learnername] = np.zeros((numparams, numruns))
 
     for r in range(numruns):
         trainset, testset = dataloader.loadData(dataFile)
@@ -55,21 +58,34 @@ if __name__ == '__main__':
                 learner.reset(params)
                 print('Running learner = '+learnername+' on parameters ' + str(learner.getparams()))
 
+                start = timeit.default_timer()
+
                 learner.learn(trainset[0], trainset[1])
                 predictions = learner.predict(testset[0])
+
+                stop = timeit.default_timer()
+
                 error = geterror(testset[1], predictions)
                 print('Error for ' + learnername + ': ' + str(error))
                 errors[learnername][p, r] = error
 
+                runningTime[learnername][p, r] = stop - start                
+
     for learnername, learner in classalgs.items():
         besterror = np.mean(errors[learnername][0,:])
+        besttime = np.mean(runningTime[learnername][0,:])
         bestparams = 0
         for p in range(numparams):
             aveerror = np.mean(errors[learnername][p,:])
+            avetime = np.mean(runningTime[learnername][p,:])
             if aveerror < besterror:
                 besterror = aveerror
                 bestparams = p
+            if avetime < besttime:
+                besttime = avetime
 
         learner.reset(parameters[bestparams])
+        print("========== Result ==========")
         print('Best parameters for ' + learnername + ': ' + str(learner.getparams()))
         print('Average error for ' + learnername + ': ' + str(besterror) + ' +- ' + str(np.std(errors[learnername][bestparams,:])/math.sqrt(numruns)))
+        print('Average time for ' + learnername + ': ' + str(besttime))

@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
+from sklearn.svm import LinearSVC
 
 class Classifier:
 
@@ -44,11 +45,11 @@ class Classifier:
 
 		return ytest
 
-class NaiveBayes(Classifier):
+class LinearClassifier(Classifier):
 
 	def __init__(self, parameters = {}):
-		self.alg = GaussianNB()
-		self.params = {'regwgt':0.5}
+		self.alg = LinearSVC()
+		self.params = {'regwgt':0.0}
 		self.reset(parameters)
 
 	def learn(self, Xtrain, ytrain):
@@ -56,6 +57,7 @@ class NaiveBayes(Classifier):
 
 	def predict(self, Xtest):
 		ytest = self.alg.predict(Xtest)
+
 		return ytest
 
 class LogisticRegressionClassifier(Classifier):
