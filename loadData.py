@@ -9,18 +9,33 @@ import pandas as pd
 
 class DataLoader:
 
-	def __init__(self):
+	def __init__(self, filename):
 		self.dict = {}
+		self.dataset = None
+		self.loadData(filename)
+
 
 	def loadData(self, filename):
 
-		dataset = pd.read_csv(filename, delimiter = ';')
-		dataset = self.processingData(dataset)
-		trainData, testData = self.splitData(dataset)
+		self.dataset = pd.read_csv(filename, delimiter = ';')
+		self.dataset = self.processingData(self.dataset)
 
-		return trainData, testData
+	def splitInputOutputData(self):
+		'''
+		Split data into inputs and outputs
+		'''
+		numOfFeatures = len(self.dataset.columns.values) - 1
+		features = self.dataset.values[:, :numOfFeatures]
+		target = self.dataset.values[:, numOfFeatures]
+
+		return features, target
+
 
 	def processingData(self, dataset):
+		'''
+		Convert catagorial value into numeric
+
+		'''
 		le = preprocessing.LabelEncoder()
 		
 		dup = dataset
@@ -33,13 +48,16 @@ class DataLoader:
 			
 		return dataset
 
-	def splitData(self, dataset):
-		numOfFeatures = len(dataset.columns.values) - 1
-		features = dataset.values[:, :numOfFeatures]
-		target = dataset.values[:, numOfFeatures]
+	def splitTrainAndTestData(self):
+		'''
+		Split dataset into train and test data set
+		'''
+
+		numOfFeatures = len(self.dataset.columns.values) - 1
+		features = self.dataset.values[:, :numOfFeatures]
+		target = self.dataset.values[:, numOfFeatures]
 
 		Xtrain, Xtest, ytrain, ytest = train_test_split(features, target, test_size = 0.33)
 
 		return (Xtrain, ytrain), (Xtest, ytest)
-
 
