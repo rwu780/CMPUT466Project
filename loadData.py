@@ -1,21 +1,20 @@
 from __future__ import division
-import math
 import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 import pandas as pd
 
-### Main Load Function
-
 class DataLoader:
 
 	def __init__(self, filename):
-		self.dict = {}
 		self.dataset = None
 		self.loadData(filename)
 
-
 	def loadData(self, filename):
+		'''
+		Load dataset into class
+
+		'''
 
 		self.dataset = pd.read_csv(filename, delimiter = ';')
 		self.dataset = self.processingData(self.dataset)
@@ -53,9 +52,11 @@ class DataLoader:
 		Split dataset into train and test data set
 		'''
 
-		numOfFeatures = len(self.dataset.columns.values) - 1
-		features = self.dataset.values[:, :numOfFeatures]
-		target = self.dataset.values[:, numOfFeatures]
+		# numOfFeatures = len(self.dataset.columns.values) - 1
+		# features = self.dataset.values[:, :numOfFeatures]
+		# target = self.dataset.values[:, numOfFeatures]
+
+		features, target = self.splitInputOutputData()
 
 		Xtrain, Xtest, ytrain, ytest = train_test_split(features, target, test_size = 0.33)
 

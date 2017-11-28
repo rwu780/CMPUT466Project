@@ -1,11 +1,16 @@
 import numpy as np
-from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.svm import LinearSVC
 
 class Classifier:
+	'''
+	Random Classifier
+
+	Base class for future classifiers
+
+	'''
 
 	def __init__(self, parameters = {}):
 		self.params = {}
@@ -76,10 +81,13 @@ class LogisticRegressionClassifier(Classifier):
 		self.resetparams(parameters)
 		self.weights = None
 		if self.params['regularizer'] is 'l1':
+			# L1 Regularizer
 			self.alg = LogisticRegression(penalty = 'l1', solver= 'saga')
 		elif self.params['regularizer'] is 'l2':
+			# L2 Regularizer with SGD, max iteration = 1000
 			self.alg = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter=1000)
 		elif self.params['regularizer'] is None:
+			# Since Logistic Regression default with l2 regularizer, thus making C a large number will effectively remove the regularization
 			self.alg = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter=1000, C = 10000)
 
 	def learn(self, Xtrain, ytrain):
@@ -90,6 +98,8 @@ class LogisticRegressionClassifier(Classifier):
 		return ytest
 
 class NeuralNetwork(Classifier):
+
+	# 1 hidden layer with 300 hidden neurons seems to give the best result
 
 	def __init__(self, parameters = {}):
 		self.params = {'regwgt':0.0, 'nh':(300,1),
@@ -117,16 +127,3 @@ class NeuralNetwork(Classifier):
 	def predict(self, Xtest):
 		ytest = self.alg.predict(Xtest)
 		return ytest
-
-
-
-
-
-
-
-
-
-
-
-
-		
