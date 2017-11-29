@@ -65,7 +65,6 @@ if __name__ == '__main__':
         print('Time to run for ' + learnername + ': ' + str(runningTime[learnername]) + ' sec')
         print('----------')
 
-
     print("========== K-fold cross validation ==========")
     accuracy = {}
     runningTime = {}

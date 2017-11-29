@@ -42,6 +42,7 @@ K-fold cross-validation with k = 10
 - https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
 - https://en.wikipedia.org/wiki/Default_(finance)
 - http://scikit-learn.org/stable/modules/classes.html
+- https://pandas.pydata.org/pandas-docs/stable/
 
 
 
