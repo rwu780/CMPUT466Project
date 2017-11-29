@@ -1,36 +1,42 @@
 # CMPUT466 Machine Learning Mini Proejct
 
-## Introduction
-Machine learning had become an important field in computer science, it can study and construction of algorithms that can learn from and make predictions on data. These algorithms can help indiviuals and companies to make better predictions on the data, which can make people life easier and increase on productivity
+## Environment
+The required libraries are sklearn, pandas and numpy. To install the libraries
 
-## Description Of Data Set
-The dataset is related to the direct marketing campaigns of a Portuguese banking institution. The dataset had recorded the client’s background and financial information whether the client want to subscribed the product(bank term deposit) or not.  
+```
+sudo pip install sklearn, pandas, numpy
+```
 
-The dataset contain 45211 records, and each record contain 16 information related to the client. Some of the data was categorical and some of them were numerical values. The target variable will be binary, either the client will subscribe the product or he/she won’t. 
+The code was run and tested under python 2.7
 
-The parameters will be tune include the following:
+To run the code
 
-- age
-- job (unemployed, blue-collar, housemaid, entrepreneur, student, admin.,technician, retired, services, management, unknown, self-employed)
-- marital (married, single, divorced)
-- education  (tertiary, secondary, primary, unknown)
-- default (yes, no)
-	- has credit in default? In Finance, in default means you fail to pay your loan 
-- balance: average yearly balance
-- housing (yes, no)
-	- housing loan
-- loan (yes, no)
-	- personal loan
-- contact (unknown, telephone, cellular)
-	- contact communication type
-- day: last contact day of the month
-- month: last contact month of year
-- duration: last contact duration in seconds
-- campaign: number of contacts performed during this campaign for this client
-- pdays: number of days that passed by after the client was last contacted 
-- previous: number of contacts performed before this campaign
-- poutcome: (unknown, other, failure, success)
-	- outcome of the previous marketing campaign
+```
+python main.py
+```
+
+## Test Data
+#### Hold Out Test
+These is a baseline algorithm, random prediction in place to serve as sanity checks.
+
+|Algorithm|Average Accuracy(%)|Running time(secs)|
+|---------|-------------|------------|
+|Random|49.8|0.00485|
+|Linear SVM|88.33|4.50|
+|Logistic Regression with no regularizer|88.96|0.515|
+|Logistic Regression with l2 regularizer|88.59|20.99|
+|Neural Network(nh = (300,1))|88.21|1.46|
+
+#### K-fold cross-validation
+K-fold cross-validation with k = 10
+
+|Algorithm|Average Accuracy(%)|Running time(secs)|
+|---------|-------------|------------|
+|Linear SVM|82.33 +- 3.33e-09|65.07|
+|Logistic Regression with no regularizer|88.28 +- 3.34e-09|7.85|
+|Logistic Regression with l2 regularizer|88.52 +- 3.34e-09|311.9|
+|Neural Network(nh = (300,1))|88.30 +- 3.34e-09|33.9|
+
 
 ## Reference
 - https://archive.ics.uci.edu/ml/datasets/Bank+Marketing
