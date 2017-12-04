@@ -57,7 +57,7 @@ class Classifier:
 class SVMClassifier(Classifier):
 
 	def __init__(self, parameters = {}):
-		self.params = {'regwgt':0.0}
+		self.params = {}
 		self.reset(parameters)
 		self.alg = LinearSVC()
 
@@ -72,7 +72,7 @@ class SVMClassifier(Classifier):
 class LogisticRegressionClassifier(Classifier):
 
 	def __init__(self, parameters = {}):
-		self.params = {'regwgt': 0.0, 'regularizer': 'None'}
+		self.params = {'regwgt': 0.0, 'regularizer': 'None', 'regularizerValue':0.01}
 		self.reset(parameters)
 		self.alg = LogisticRegression()
 
@@ -85,7 +85,9 @@ class LogisticRegressionClassifier(Classifier):
 			self.alg = LogisticRegression(penalty = 'l1', solver= 'saga')
 		elif self.params['regularizer'] is 'l2':
 			# L2 Regularizer with SGD, max iteration = 1000
-			self.alg = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter=1000)
+			# Smaller the C is, stronger regularization there is
+			regularizerValue = self.params['regularizerValue']
+			self.alg = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter=1000, C = 1/regularizerValue)
 		elif self.params['regularizer'] is None:
 			# Since Logistic Regression default with l2 regularizer, thus making C a large number will effectively remove the regularization
 			self.alg = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter=1000, C = 10000)
@@ -102,25 +104,26 @@ class NeuralNetwork(Classifier):
 	# 1 hidden layer with 300 hidden neurons seems to give the best result
 
 	def __init__(self, parameters = {}):
-		self.params = {'regwgt':0.0, 'nh':(300,1),
+		self.params = {'regwgt':0.0, 'nh':(300,),
 						'transfer': 'sigmoid',
 						'stepsize': 0.01,
 						'epochs': 200
 							}
 		self.reset(parameters)
-		self.alg = MLPClassifier()
+		#self.alg = MLPClassifier()
 
 	def reset(self, parameters):
 		self.resetparams(parameters)
 		self.transfer = ''
 		if self.params['transfer'] is 'sigmoid':
-			self.transfer = 'sigmoid'
+			#print(str(self.params['nh']))
 			self.alg = MLPClassifier(hidden_layer_sizes = self.params['nh'],
 									 activation = 'logistic',
 									 solver = 'sgd',
 									 learning_rate = 'constant',
 									 learning_rate_init = self.params['stepsize'],
 									 max_iter = self.params['epochs'])
+			#print(str(self.alg))
 	def learn(self, Xtrain, ytrain):
 		self.alg.fit(Xtrain, ytrain)
 

@@ -17,15 +17,22 @@ class DataLoader:
 		'''
 
 		self.dataset = pd.read_csv(filename, delimiter = ';')
+		#self.dataset.drop(['duration'], 1)
+		#print(self.dataset.head())
+
 		self.dataset = self.processingData(self.dataset)
 
 	def splitInputOutputData(self):
 		'''
 		Split data into inputs and outputs
 		'''
-		numOfFeatures = len(self.dataset.columns.values) - 1
+
+		numOfFeatures = len(self.dataset.columns.values) - 2
+		
 		features = self.dataset.values[:, :numOfFeatures]
-		target = self.dataset.values[:, numOfFeatures]
+
+
+		target = self.dataset.values[:, numOfFeatures+1]
 
 		return features, target
 
